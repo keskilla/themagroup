@@ -1,5 +1,6 @@
 <?php
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 require('modele/model.php');
 
 function indexStarter()
@@ -67,37 +68,82 @@ function contactmoi()
 }
 function sentmail($nom,$mail,$prenom,$ville,$cp,$adresse,$tel,$textarea,$profil){
 
-    $header="MIME-Version: 1.0\r\n";
-    $header.='From:"themagroup"<support@themagroup.com>'."\n";
-    $header.='Content-Type:text/html; charset="uft-8"'."\n";
-    $header.='Content-Transfer-Encoding: 8bit';
-    $sujet = 'Demande de contact';
-    $message='
-    <html>
-    <body>
-    <div align="center">        
-    <img src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/33532921_1819309775030809_5574464914203869184_n.png?_nc_cat=0&oh=6e44825076ae5d10fc26ab230b1e7069&oe=5BEA54F3" 
-    height="102" width="102"/>
-    </div> 
-    <br>
-    <div align="center"> 
-    <strong>Nom :</strong> '.$nom.' <br>
-    <strong>Prénom :</strong> '.$prenom.'<br>
-    <strong>Profil</strong> '.$profil.' <br>
-    <strong>Adresse :</strong> '.$adresse.'<br>
-    <strong>Ville :</strong> '.$ville.'<br>
-    <strong>CP :</strong> '.$cp.'<br>
-    <strong>Tél: </strong>'.$tel.'<br>
-    <strong>Adresse email :</strong> '.$mail.'<br>
-    <br>
-    <hr>
-    <strong>Objet :</strong> '.$sujet.'<br>   
-    <strong>Message :</strong> '.$textarea.'  
-    </div>
-    </body>
-    </html>';
-    mail("yazid.zibem@gmail.com", $sujet, $message, $header);
-	mail("contact@formationprevention.com", $sujet, $message, $header);
+    $imail = new PHPMailer(true);
+    try {
+        //Server settings
+        // $mail->SMTPDebug = 1;                                 // Enable verbose debug output
+        // $mail->isSMTP();                                      // Set mailer to use SMTP
+        // $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
+        // $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        // $mail->Username = 'user@example.com';                 // SMTP username
+        // $mail->Password = 'secret';                           // SMTP password
+        // $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+        // $mail->Port = 587;                                    // TCP port to connect to
+
+        //Recipients
+        $imail->setFrom('themagroup@example.com', 'themagroup');
+        $imail->addAddress('yazid.zibem@gmail.com');     // Add a recipient
+        // $mail->addAddress('ellen@example.com');               // Name is optional
+        // $mail->addReplyTo('info@example.com', 'Information');
+        // $mail->addCC('cc@example.com');
+        // $mail->addBCC('bcc@example.com');
+
+        //Attachments
+        // $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+        //  $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+        //Content
+        $body = '<h3>Information sur le contact :</h3>
+            <p>Name :  <b>'.$nom.'</b></p>
+            <p>Nickname : <b>'.$prenom.'</b></p>
+                <p>email : <b>'.$mail.'</b></p>
+                <p>Phone : <b>'.$tel.'</b></p>
+                <p>Profil : <b>'.$profil.'</b></p>
+                <p>Message : <b>'.$textarea.'</b></p>
+         
+         ';
+
+    $imail->isHTML(true);                                  // Set email format to HTML
+    $imail->Subject = 'Demande de contact';
+    $imail->Body    = $body;
+    $imail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $imail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo 'Message could not be sent. Mailer Error: ', $imail->ErrorInfo;
+    }
+ //    $header="MIME-Version: 1.0\r\n";
+ //    $header.='From:"themagroup"<support@themagroup.com>'."\n";
+ //    $header.='Content-Type:text/html; charset="uft-8"'."\n";
+ //    $header.='Content-Transfer-Encoding: 8bit';
+ //    $sujet = 'Demande de contact';
+ //    $message='
+ //    <html>
+ //    <body>
+ //    <div align="center">        
+ //    <img src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/33532921_1819309775030809_5574464914203869184_n.png?_nc_cat=0&oh=6e44825076ae5d10fc26ab230b1e7069&oe=5BEA54F3" 
+ //    height="102" width="102"/>
+ //    </div> 
+ //    <br>
+ //    <div align="center"> 
+ //    <strong>Nom :</strong> '.$nom.' <br>
+ //    <strong>Prénom :</strong> '.$prenom.'<br>
+ //    <strong>Profil</strong> '.$profil.' <br>
+ //    <strong>Adresse :</strong> '.$adresse.'<br>
+ //    <strong>Ville :</strong> '.$ville.'<br>
+ //    <strong>CP :</strong> '.$cp.'<br>
+ //    <strong>Tél: </strong>'.$tel.'<br>
+ //    <strong>Adresse email :</strong> '.$mail.'<br>
+ //    <br>
+ //    <hr>
+ //    <strong>Objet :</strong> '.$sujet.'<br>   
+ //    <strong>Message :</strong> '.$textarea.'  
+ //    </div>
+ //    </body>
+ //    </html>';
+ //    mail("yazid.zibem@gmail.com", $sujet, $message, $header);
+	// mail("contact@formationprevention.com", $sujet, $message, $header);
 }
 
 function loginVerif()
