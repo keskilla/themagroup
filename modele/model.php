@@ -494,7 +494,7 @@ function dbCondnect()
     }
 }
 
-function dbCfonnect()
+function dbConnect()
 {
     try
     {
@@ -507,7 +507,7 @@ function dbCfonnect()
     }
 }
 
-function dbConnect()
+function dbfConnect()
 {
     try
     {
